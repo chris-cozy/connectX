@@ -74,7 +74,40 @@ public interface IGameBoard {
      * @post none
      * @return true if last token placed results in a horizontal win, false otherwise
      */
-    public boolean checkHorizWin(BoardPosition pos, char p);
+    default boolean checkHorizWin(BoardPosition pos, char p){
+        //new implementation
+        //start with a count index of 1
+        int count = -1;
+        //temp board position at token placement
+        int curRow = pos.getRow();
+        int curCol = pos.getColumn();
+
+        //count the number of consecutive tokens to the right token and add to count index
+        for(int right = curCol; right < getNumColumns(); right++){
+            BoardPosition temp = new BoardPosition(curRow, right);
+            if(whatsAtPos(temp) != p){
+                break;
+            }else{
+                count++;
+            }
+        }
+        //count the number of consecutives to the left token and add to count index
+        for(int left = curCol; left > -1; left--){
+            BoardPosition temp = new BoardPosition(curRow, left);
+            if(whatsAtPos(temp) != p){
+                break;
+            }else{
+                count++;
+            }
+        }
+
+        //if count index equals numToWin return true, else return false
+        if (count >= getNumToWin()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * Checks if last token placed results in a vertical win
@@ -85,7 +118,30 @@ public interface IGameBoard {
      * @post none
      * @return true if last token placed results in a vertical win, false otherwise
      */
-    public boolean checkVertWin(BoardPosition pos, char p);
+    default boolean checkVertWin(BoardPosition pos, char p){
+        //new implementation
+        //start with a count index of 1
+        int count = 0;
+        //temp board position at token placement
+        int curRow = pos.getRow();
+        int curCol = pos.getColumn();
+
+        //count the number of consecutive tokens below token and add to count index
+        for(int below = curRow; below > -1; below--){
+            BoardPosition temp = new BoardPosition(below, curCol);
+            if(whatsAtPos(temp) != p){
+                break;
+            }else{
+                count++;
+            }
+        }
+        //if count index equals numToWin return true, else return false
+        if (count >= getNumToWin()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * Checks if last token placed results in a diagonal win
@@ -95,7 +151,72 @@ public interface IGameBoard {
      * @post none
      * @return true if last token placed results in a diagonal win, false otherwise
      */
-    public boolean checkDiagWin(BoardPosition pos, char p);
+    default boolean checkDiagWin(BoardPosition pos, char p){
+        //check all right and left diagonal situations
+        int c1 = 0;
+        int c2 = 0;
+        int row = pos.getRow();
+        int col = pos.getColumn();
+
+        //counts upper right
+        while((row < getNumRows() + 1) && (col < getNumColumns() + 1)){
+            BoardPosition current = new BoardPosition(row,col);
+            if((whatsAtPos(current) == p)){
+                c1++;
+                row++;
+                col++;
+            }else{
+                break;
+            }
+        }
+
+        row = pos.getRow();
+        col = pos.getColumn();
+        //counts lower left
+        while((row > -1) && (col > -1)){
+            BoardPosition current = new BoardPosition(row,col);
+            if((whatsAtPos(current) == p)){
+                c1++;
+                row--;
+                col--;
+            }else{
+                break;
+            }
+        }
+
+        row = pos.getRow();
+        col = pos.getColumn();
+        //counts upper left
+        while((row < getNumRows() + 1) && (col > -1)){
+            BoardPosition current = new BoardPosition(row,col);
+            if((whatsAtPos(current) == p)){
+                c2++;
+                row++;
+                col--;
+            }else{
+                break;
+            }
+        }
+
+        row = pos.getRow();
+        col = pos.getColumn();
+        //counts lower right
+        while((row > -1) && (col < getNumColumns() + 1)){
+            BoardPosition current = new BoardPosition(row,col);
+            if((whatsAtPos(current) == p)){
+                c2++;
+                row--;
+                col++;
+            }else{
+                break;
+            }
+        }
+        if((c1 > getNumToWin()) || (c2 > getNumToWin())){
+            return true;
+        } else{
+            return false;
+        }
+    }
 
     /**
      * Returns the char that is in the BoardPosition pos, or ' ' if there is none

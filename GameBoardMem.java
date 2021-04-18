@@ -58,11 +58,9 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
                     boolean free = true;
                     //creates a temp position for space being evaluated
                     BoardPosition current = new BoardPosition(j,c);
-                    //could use get for each player index, set their list of positions equal to a temp list, then call list.contains()
-                    for(int i = 0; i < playerNum; i++){
-                        //sets a temp list to the list of board positions occupied by that player
-                        List<BoardPosition>temp = board.get(players[i]);
-                        //if a player is occupied that position, exit the search and move to the next position
+                    //use get for each player index, set their list of positions equal to a temp list, then call list.contains()
+                    for(Map.Entry<Character, List<BoardPosition>> b:board.entrySet()){
+                        List<BoardPosition> temp = b.getValue();
                         if (temp != null){
                             if(temp.contains(current)){
                                 free = false;
@@ -105,7 +103,6 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
                     return players[i];
                 }
             }
-
         }
         return ' ';
     }

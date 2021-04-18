@@ -85,7 +85,7 @@ public class GameScreen {
                     int comp = Character.compare(gS.Toke, gS.players[j]);
                     //if present, ask for new choice and reset j
                     if(comp == 0){
-                        System.out.print("That Token ha already been assigned. Choose another:\n");
+                        System.out.print("That Token has already been assigned. Choose another:\n");
                         gS.toke = scanner.next().charAt(0);
                         gS.Toke = Character.toUpperCase(gS.toke);
                         j = -1;
@@ -122,7 +122,7 @@ public class GameScreen {
 
             if(gS.imp == 'M'){
                 System.out.print("Memory Efficient implementation...\n");
-                play = new GameBoardMem(gS.maxRowChoice, gS.maxColChoice, gS.numToWin, gS.players, gS.playerNum);
+                play = new GameBoardMem(gS.maxRowChoice, gS.maxColChoice, gS.numToWin);
             }
 
 

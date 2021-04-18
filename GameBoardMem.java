@@ -17,8 +17,6 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
     private int maxRow;
     private int maxCol;
     private int numToWin;
-    private char [] players = new char[10];
-    private int playerNum;
 
     /**
      * Default Constructor
@@ -31,9 +29,7 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
      * @post board = new Hashmap<Character, List<BoardPosition>>
      * @return none
      */
-    public GameBoardMem(int row, int col, int win, char[] people, int numPlayers){
-        players = people;
-        playerNum = numPlayers;
+    public GameBoardMem(int row, int col, int win){
         maxRow = row;
         maxCol = col;
         numToWin = win;
@@ -94,14 +90,10 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
 
     public char whatsAtPos(BoardPosition pos){
         //cycle through player array like in place token and find the list with the position, and return the key with it
-        for(int i = 0; i < playerNum; i++){
-            if (board.containsKey(players[i])){
-                //sets a temp list to the list of board positions occupied by that player
-                List<BoardPosition>temp = board.get(players[i]);
-                //if a player is occupied that position, exit the search and move to the next position
-                if(temp.contains(pos)){
-                    return players[i];
-                }
+        for(Map.Entry<Character, List<BoardPosition>> b:board.entrySet()){
+            List<BoardPosition> temp = b.getValue();
+            if(temp.contains(pos)){
+                return b.getKey();
             }
         }
         return ' ';

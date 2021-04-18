@@ -41,8 +41,6 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
         board = new HashMap<Character, List<BoardPosition>>();
     }
 
-
-
     public int getNumRows(){
         return maxRow;
     }
@@ -51,40 +49,11 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
         return numToWin;
     }
 
-    public boolean checkIfFree(int c){
-        //creates new boardposition at the top of the selected column and checks if that space is filled
-        BoardPosition temp = new BoardPosition(maxRow,c);
-        if((whatsAtPos(temp) != ' ')){
-            return false;
-        }
-        return true;
-    }
-
-    public boolean checkForWin(int c){
-        //cycles through column from the top to find the first filled spot (last placed token) then checks if that resulted in a win
-        for (int j = maxRow; j > -1; j--){
-            BoardPosition current = new BoardPosition(j,c);
-            if(whatsAtPos(current) != ' '){
-                char player = whatsAtPos(current);
-                if(checkHorizWin(current, player)){
-                    return true;
-                } else if(checkVertWin(current, player)){
-                    return true;
-                } else if(checkDiagWin(current, player)){
-                    return true;
-                } else{
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
-
     public void placeToken(char p, int c){
         if(!board.isEmpty()){
             if(checkIfFree(c)){
                 //loops through the free column starting from the bottom to find the first available space
-                for(int j = 0; j <= maxRow; j++){
+                for(int j = 0; j <= getNumRows(); j++){
                     //innocent until proven guilty
                     boolean free = true;
                     //creates a temp position for space being evaluated
@@ -123,17 +92,6 @@ public class GameBoardMem extends AbsGameBoard implements IGameBoard{
         List<BoardPosition>x = new ArrayList<BoardPosition>();
         x.add(current);
         board.put(p, x);
-    }
-
-    public boolean checkTie(){
-        //goes through every column and makes sure there's not a win, then checks if all of the spaces are full
-        for(int i = 0; i <= maxCol; i++){
-            if(checkForWin(i)){ return false;}
-        }
-        for(int i = 0; i <= maxCol; i++) {
-            if (checkIfFree(i)) { return false;}
-        }
-        return true;
     }
 
     public char whatsAtPos(BoardPosition pos){

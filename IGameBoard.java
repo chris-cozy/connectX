@@ -35,7 +35,14 @@ public interface IGameBoard {
      * @post none
      * @return true if column can accept another token, false otherwise
      */
-    public boolean checkIfFree(int c);
+    default boolean checkIfFree(int c){
+        //creates new boardposition at the top of the selected column and checks if that space is filled
+        BoardPosition temp = new BoardPosition(getNumRows(),c);
+        if ((whatsAtPos(temp) != ' ')){
+            return false;
+        }
+        return true;
+    }
     /**
      * Checks if the last token placed (in column c) results in a player win
      * @param c
@@ -44,7 +51,25 @@ public interface IGameBoard {
      * @post none
      * @return true if last token placed results in a player win, false otherwise
      */
-    public boolean checkForWin(int c);
+    default boolean checkForWin(int c){
+        //cycles through column from the top to find the first filled spot (last placed token) then checks if that resulted in a win
+        for (int j = getNumRows(); j > -1; j--){
+            BoardPosition current = new BoardPosition(j,c);
+            if(whatsAtPos(current) != ' '){
+                char player = whatsAtPos(current);
+                if(checkHorizWin(current, player)){
+                    return true;
+                } else if(checkVertWin(current, player)){
+                    return true;
+                } else if(checkDiagWin(current, player)){
+                    return true;
+                } else{
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Checks if the GameBoard results in a tie game
@@ -52,7 +77,16 @@ public interface IGameBoard {
      * @post none
      * @return true if gameboard results in a tie game, false otherwise
      */
-    public boolean checkTie();
+    default boolean checkTie(){
+        //goes through every column and makes sure there's not a win, then checks if all of the spaces are full
+        for(int i = 0; i <= getNumColumns(); i++){
+            if( checkForWin(i)){ return false;}
+        }
+        for(int i = 0; i <= getNumColumns(); i++) {
+            if (checkIfFree(i)) { return false;}
+        }
+        return true;
+    }
 
     /**
      * Places he correct player token in column c
